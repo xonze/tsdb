@@ -1,8 +1,5 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-// Please require Validation.php author by roychen
-require_once('Validation.php');
-
 /**
  * tsdb 
  * 
@@ -25,11 +22,11 @@ class tsdb {
         'dev' 
     );
     private $_metric;
-    private $_url = 'http://172.17.130.4:4242/q?';
-    private $_validation;
+    private $_domain;
 
-    public function __construct() {
-        $this->_validation  = new Validation(); 
+    public function __construct($domain) {
+        $this->_aggregation = 'sum';
+        $this->setDomain($domain);
     }
 
     /**
@@ -91,10 +88,18 @@ class tsdb {
         $this->_metric = $metric;
         return $this->_metric;
     }
+    
+    public function setTag($tags = array()) {
+    }
 
     public function setAggregation($aggregation) {
         $this->_aggregation = in_array($aggregation, $this->_aggregationField) ? $aggregation : 'sum'; 
         return $this->_aggregation;
+    }
+
+    public function setDomain($url) {
+        $this->_domain  = preg_match('/http/i', $url) ? $url : 'http://'.$url;
+        $this->_domain .= substr($this->_domain, 0, -1) === '/' ? 'q?': '/q?';
     }
 
     /**
@@ -119,7 +124,7 @@ class tsdb {
     
     private function _spliceUrl($startTime, $endTime = false) {
         // Start and End
-        $url = $this->_url.'start='.$startTime;
+        $url = $this->_domain.'start='.$startTime;
         if ($endTime !== false) {
             $url .= '&end='.$endTime;
         }
