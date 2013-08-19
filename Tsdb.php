@@ -1,10 +1,7 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 /**
  * tsdb 
- * 
- * Please set Metric first
- * Do not support tags this version
  *
  * @package 
  * @version 0.0.1
@@ -99,7 +96,7 @@ class tsdb {
 
     public function setDomain($url) {
         $this->_domain  = preg_match('/http/i', $url) ? $url : 'http://'.$url;
-        $this->_domain .= substr($this->_domain, 0, -1) === '/' ? 'q?': '/q?';
+        $this->_domain .= substr($this->_domain, -1, 1) === '/' ? 'q?': '/q?';
     }
 
     /**
@@ -134,7 +131,6 @@ class tsdb {
         return $url;
     }
 }
-// END Tsdb Class
 
+// END Tsdb Class
 /* End of file Tsdb.php */
-/* Location: ./system/libraries/Tsdb.php */
