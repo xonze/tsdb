@@ -25,7 +25,7 @@ class tsdb {
         $this->_aggregation = 'sum';
         $this->setDomain($domain);
     }
-
+    
     /**
      * get 
      * 
@@ -46,7 +46,8 @@ class tsdb {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); 
         $html = curl_exec($curl);
         curl_close($curl);
-     
+        
+        /* 
         $tmpArray    = explode("\n", $html);
      
         unset($tmpArray[count($tmpArray) - 1]);
@@ -61,7 +62,6 @@ class tsdb {
                 // 'tags'      => array()
             );
             
-            /* 
             for ($i = 0; $i <= 2; $i++) {
                 unset($infoArray[$i]);
             }
@@ -73,12 +73,12 @@ class tsdb {
                     'value' => $tmp[1]
                 ));
             }
-             */
      
             array_push($res, $info);
         }
 
         return $res;
+        */
     }
 
     public function setMetric($metric) {
@@ -106,7 +106,7 @@ class tsdb {
      * @return boolean 
      */
     private function _isSetMetric() {
-        return !$this->_validation->isEmpty($this->_metric);
+        return !($this->_metric === false || $this->_metric === null);
     }
 
     /**
@@ -116,7 +116,7 @@ class tsdb {
      * @return boolean 
      */
     private function _isSetAggregation() {
-        return !$this->_validation->isEmpty($this->_aggregation);
+        return !($this->_aggregation === false || $this->_aggregation === null);
     }
     
     private function _spliceUrl($startTime, $endTime = false) {
