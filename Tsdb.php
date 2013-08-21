@@ -35,10 +35,6 @@ class tsdb {
      * @return void
      */
     public function get($startTime, $endTime = false) {
-        if (!$this->_isSetMetric() || !$this->_isSetAggregation()) {
-            return false;
-        }
-        
         $url    = $this->_spliceUrl($startTime, $endTime);
 
         $curl   = curl_init();
@@ -46,8 +42,7 @@ class tsdb {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); 
         $html = curl_exec($curl);
         curl_close($curl);
-        
-        /* 
+
         $tmpArray    = explode("\n", $html);
      
         unset($tmpArray[count($tmpArray) - 1]);
@@ -56,16 +51,15 @@ class tsdb {
         foreach ($tmpArray as $tmp) {
             $infoArray = explode(' ', $tmp);
             $info   = array(
-                // 'metric'    => $infoArray[0],
                 'timestamp' => $infoArray[1],
                 'value'     => $infoArray[2],
-                // 'tags'      => array()
+                'tags'      => array()
             );
             
             for ($i = 0; $i <= 2; $i++) {
                 unset($infoArray[$i]);
             }
-     
+            
             foreach ($infoArray as $i) {
                 $tmp    = explode('=', $i);
                 array_push($info['tags'], array(
@@ -78,7 +72,6 @@ class tsdb {
         }
 
         return $res;
-        */
     }
 
     public function setMetric($metric) {
@@ -87,6 +80,8 @@ class tsdb {
     }
     
     public function setTag($tags = array()) {
+        $this->_tags = $tags;
+        return $this->_tags;
     }
 
     public function setAggregation($aggregation) {
