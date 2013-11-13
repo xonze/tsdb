@@ -1,4 +1,6 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
+
+require_once('./Point.php');
 
 /**
  * tsdb 
@@ -255,11 +257,7 @@ class tsdb {
             }
             
             // Push data
-            $info   = array(
-                'timestamp' => $infoArray[1],
-                'value'     => $infoArray[2],
-            );
-            
+            $info   = new Point($infoArray[1], $infoArray[2]);
             array_push($res, $info);
         }
 
